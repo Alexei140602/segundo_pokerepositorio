@@ -1,4 +1,4 @@
-import '../models/pokemon.dart';
+import 'pokemon.dart';
 
 final Pokemon tyranitar = Pokemon(
   nombre: "Tyranitar",
