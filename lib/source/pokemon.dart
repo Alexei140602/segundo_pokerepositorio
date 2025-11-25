@@ -17,7 +17,7 @@ class Pokemon
 
   void damage(int damage)
   {
-    vidaActual-damage;
+    vidaActual-=damage;
     if (vidaActual<0)
     {
       vidaActual=0;
