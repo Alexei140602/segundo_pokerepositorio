@@ -4,8 +4,8 @@ final Pokemon tyranitar = Pokemon(
   nombre: "Tyranitar",
   tipos: [13,16],
   numeroEnPokedex: 0248,
-  vidaMax: 1000000000,
-  velocidad: 1000000000,
+  vidaMax: 500,
+  velocidad: 100,
 );
 
 final Pokemon charizard = Pokemon(
