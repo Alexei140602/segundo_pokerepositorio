@@ -6,12 +6,13 @@ class Pokemon
   int vidaMax;
   int vidaActual;
   int velocidad;
-  
+  int numeroEnPokedex
   Pokemon
   ({
     required this.nombre,
     required this.vidaMax,
     required this.velocidad
+    required this.numero
   }) : vidaActual = vidaMax;
 
 
