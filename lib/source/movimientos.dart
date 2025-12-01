@@ -180,12 +180,9 @@ class Movimientos {
         cabezaHierro,
       ];
 
-  // Obtener movimiento por nombre
-  static Movimiento? porNombre(String nombre) {
-    try {
-      return todos.firstWhere((movimiento) => movimiento.nombre == nombre);
-    } catch (e) {
-      return null;
-    }
+  // Obtener movimiento por id
+  static Movimiento? porId(int id) {
+      return todos.firstWhere((movimiento) => movimiento.id == id);
+
   }
 }

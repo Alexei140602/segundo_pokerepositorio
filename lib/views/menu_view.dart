@@ -14,7 +14,6 @@ class _MenuViewState extends State<MenuView> {
   bool mostrarMochila = false;
   int pokemonSeleccionado = -1;
 
-  // Lista de los 17 Pokémon
   final List<String> pokemones = [
     'tyranitar',
     'charizard',

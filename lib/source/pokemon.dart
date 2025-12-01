@@ -1,20 +1,26 @@
+import 'dart:ffi';
 import 'tablatipos.dart';
+import 'pokemones.dart';
 
 class Pokemon 
 {
   final String nombre;
+  int id;
   List <int> tipos;
   int vidaMax;
   int vidaActual;
   int velocidad;
   int numeroEnPokedex;
+  int estado;
   Pokemon
   ({
     required this.tipos,
+    required this.id,
     required this.nombre,
     required this.vidaMax,
     required this.velocidad,
-    required this.numeroEnPokedex
+    required this.numeroEnPokedex,
+    required this.estado
   }) : vidaActual = vidaMax;
 
 
@@ -36,4 +42,6 @@ class Pokemon
   {
 
   }
+  
 }
+ 

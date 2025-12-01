@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: const MenuView(), // Esta es tu pantalla de menú
+      home: const MenuView(), 
       debugShowCheckedModeBanner: false,
     );
   }
