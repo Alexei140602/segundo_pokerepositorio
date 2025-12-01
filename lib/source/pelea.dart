@@ -28,17 +28,36 @@ class Pelea
       Pokemon? poke2=poketemporal1;
     }
       //primer ataque
-      double resistencia = multiplicadorResistidoPor(poke2.tipos??[], mov1?.tipo) ;
+      double resistencia = multiplicadorResistidoPor(poke2.tipos??[], mov1?.tipo);
       double efectivo= multiplicadorSuperefectivoPor(poke2.tipos??[], mov1?.tipo);
+      bool fueinmune=false;
+      int damage;
+      int paralisis=Random().nextInt(21) + 80;
       if (inmune(poke2.tipos??[], mov1?.tipo))
       {
         resistencia=0;
         efectivo=0;
+        fueinmune=true;
       }
       double calculo1 = ((2 * 10 + 2) * mov1!.poder / 50 + 2) * resistencia * efectivo;
-      int damage=calculo1.round();
-      poke2.damage(damage);
 
+      if(poke1.estado==3 && paralisis>80)
+      {
+        damage=calculo1.round();
+        poke2.damage(damage);
+      }
+
+      if ((mov1?.estadoAlterado?? 0) !=0 && fueinmune==false)
+      {
+         int prob=0;
+            prob= Random().nextInt(21) + 70;
+            if(prob>60)
+            {
+              poke2.estado=mov1?.estadoAlterado?? 0;
+            }
+           
+        }
+        
       //segundo ataque
       resistencia = multiplicadorResistidoPor(poke1.tipos??[], mov2?.tipo) ;
       efectivo= multiplicadorSuperefectivoPor(poke1.tipos??[], mov2?.tipo);
@@ -47,9 +66,32 @@ class Pelea
         resistencia=0;
         efectivo=0;
       }
-      double calculo2 = ((2 * 10 + 2) * mov1!.poder / 50 + 2) * resistencia * efectivo;
-      damage=calculo2.round();
-      poke2.damage(damage);  
+      double calculo2 = ((2 * 10 + 2) * mov2!.poder / 50 + 2) * resistencia * efectivo;
+      if(poke1.estado==3 && paralisis>80)
+      {
+        damage=calculo2.round();
+        poke1.damage(damage);
+      }
+      
+      
+      if ((mov2?.estadoAlterado?? 0) !=0 && fueinmune==false)
+      {
+         int prob=0;
+            prob= Random().nextInt(21) + 70;
+            if(prob>60)
+            {
+              poke1.estado=mov2?.estadoAlterado?? 0;
+            }
+      }
+      switch (poke1.estado) {
+        case 0: 
+        break;
+        case 1:
+        poke1.damage(poke1.vidaMax*.07.round());
+        case 2:
+        poke1.damage(poke1.vidaMax*.07.round());
+        default:
+      }
   }
   
 }

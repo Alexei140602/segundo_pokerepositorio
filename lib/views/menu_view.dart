@@ -108,7 +108,16 @@ class _MenuViewState extends State<MenuView> {
           setState(() {
             selectedIndex = index;
             if (index == 0) {
-              fondo = 'assets/sprites/menu/fondocombate.png';
+              // Navegar a la pantalla de combate
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BattleView(
+                    pokemonAliado: 'charizard',
+                    pokemonEnemigo: 'chandelure',
+                  ),
+                ),
+              );
             } else {
               mostrarMochila = true;
               pokemonSeleccionado = -1;
@@ -342,6 +351,159 @@ class _MenuViewState extends State<MenuView> {
             fontSize: 12,
             color: Colors.white,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// NUEVA CLASE PARA LA PANTALLA DE COMBATE
+class BattleView extends StatelessWidget {
+  final String pokemonAliado;
+  final String pokemonEnemigo;
+
+  const BattleView({
+    super.key,
+    required this.pokemonAliado,
+    required this.pokemonEnemigo,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // FONDO DE COMBATE
+          Positioned.fill(
+            child: Image.asset(
+              'assets/sprites/menu/fondocombate.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          
+          // Pokémon ENEMIGO (parte superior derecha)
+          Positioned(
+            top: 100,
+            right: 30,
+            child: Container(
+              width: 200,
+              height: 200,
+              child: Image.asset(
+                '/sprites/pokemon/${pokemonEnemigo.toLowerCase()}.png',
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: Center(
+                      child: Text(
+                        'No encontrado\n${pokemonEnemigo.toUpperCase()}',
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 10,
+                          color: Colors.black54,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          
+          // Pokémon ALIADO (parte inferior izquierda)
+          Positioned(
+            bottom: 100,
+            left: 30,
+            child: Container(
+              width: 200,
+              height: 200,
+              child: Image.asset(
+                '/sprites/pokemon/${pokemonAliado.toLowerCase()}.png',
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: Center(
+                      child: Text(
+                        'No encontrado\n${pokemonAliado.toUpperCase()}',
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 10,
+                          color: Colors.black54,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          
+          // Menú de opciones de combate
+          Positioned(
+            bottom: 20,
+            left: 20,
+            right: 20,
+            child: _buildMenuCombate(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMenuCombate(BuildContext context) {
+    return Container(
+      height: 120,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.black, width: 3),
+      ),
+      child: GridView.count(
+        crossAxisCount: 2,
+        padding: EdgeInsets.all(10),
+        childAspectRatio: 2.5,
+        children: [
+          _buildBotonCombate('ATACAR', Icons.bolt, Colors.red, () {
+            // Lógica de ataque
+          }),
+          _buildBotonCombate('CAMBIAR', Icons.swap_horiz, Colors.blue, () {
+            // Lógica cambiar Pokémon
+          }),
+          _buildBotonCombate('MOCHILA', Icons.backpack, Colors.green, () {
+            // Lógica usar item
+          }),
+          _buildBotonCombate('HUIDA', Icons.exit_to_app, Colors.orange, () {
+            Navigator.pop(context); // Volver al menú principal
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBotonCombate(String texto, IconData icono, Color color, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.black, width: 2),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icono, color: Colors.white, size: 20),
+            SizedBox(width: 8),
+            Text(
+              texto,
+              style: GoogleFonts.pressStart2p(
+                fontSize: 10,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       ),
     );

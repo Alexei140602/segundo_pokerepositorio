@@ -26,5 +26,5 @@ flutter:
   
   assets:
     - assets/sprites/menu/
-    - assets/menu/mochila/ 
+    - assets/menu/mochila/
     - assets/audio/
