@@ -408,7 +408,7 @@ class BattleView extends StatelessWidget {
               width: 200,
               height: 200,
               child: Image.asset(
-                'assets/sprites/pokemon/${pokemonEnemigo.toLowerCase()}.png',
+                '/sprites/pokemon/${pokemonEnemigo.toLowerCase()}.png',
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -437,7 +437,7 @@ class BattleView extends StatelessWidget {
               width: 200,
               height: 200,
               child: Image.asset(
-                'assets/sprites/pokemon/${pokemonAliado.toLowerCase()}.png',
+                '/sprites/pokemon/${pokemonAliado.toLowerCase()}.png',
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
