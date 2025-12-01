@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pokemonpro/source/pokemon.dart';
+import '../source/movimientos.dart';
+import '../source/pelea.dart';
+import '../source/pokemones.dart';
+import 'dart:math';
+
+// Remueve estos imports si causan problemas con dart:ffi
+// o hazlos condicionales
 
 class MenuView extends StatefulWidget {
   const MenuView({super.key});
@@ -113,8 +121,9 @@ class _MenuViewState extends State<MenuView> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BattleView(
-                    pokemonAliado: 'charizard',
-                    pokemonEnemigo: 'chandelure',
+                    // Pasar Pokémon reales
+                    equipoAliado: generarEquipo(),
+                    equipoEnemigo: generarEquipo(),
                   ),
                 ),
               );
@@ -145,6 +154,19 @@ class _MenuViewState extends State<MenuView> {
         ),
       ),
     );
+  }
+
+  List<int> generarEquipo() {
+    Random random = Random();
+    List<int> equipo = [];
+
+    while (equipo.length < 3) {
+      int numeroAleatorio = random.nextInt(17) + 1;
+      if (!equipo.contains(numeroAleatorio)) {
+        equipo.add(numeroAleatorio);
+      }
+    }
+    return equipo;
   }
 
   Widget _buildMochilaLista() {
@@ -248,7 +270,7 @@ class _MenuViewState extends State<MenuView> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  nombrePokemon.toUpperCase(),
+                  nombrePokemon.toLowerCase(),
                   style: GoogleFonts.pressStart2p(
                     fontSize: 18,
                     color: Colors.white,
@@ -321,7 +343,7 @@ class _MenuViewState extends State<MenuView> {
             const SizedBox(width: 15),
             Expanded(
               child: Text(
-                nombrePokemon.toUpperCase(),
+                nombrePokemon.toLowerCase(),
                 style: GoogleFonts.pressStart2p(
                   fontSize: 14,
                   color: Colors.black,
@@ -357,19 +379,49 @@ class _MenuViewState extends State<MenuView> {
   }
 }
 
-// NUEVA CLASE PARA LA PANTALLA DE COMBATE
-class BattleView extends StatelessWidget {
-  final String pokemonAliado;
-  final String pokemonEnemigo;
+// NUEVA CLASE PARA LA PANTALLA DE COMBATE - SOLUCIÓN CORREGIDA
+class BattleView extends StatefulWidget {
+  final List<int> equipoAliado;
+  final List<int> equipoEnemigo;
 
   const BattleView({
     super.key,
-    required this.pokemonAliado,
-    required this.pokemonEnemigo,
+    required this.equipoAliado,
+    required this.equipoEnemigo,
   });
 
   @override
+  State<BattleView> createState() => _BattleViewState();
+}
+
+class _BattleViewState extends State<BattleView> {
+  Pokemon? pokemonAliado;
+  Pokemon? pokemonEnemigo;
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarPokemons();
+  }
+
+  void _cargarPokemons() {
+    // Cargar Pokémon aliado
+    if (widget.equipoAliado.isNotEmpty) {
+      pokemonAliado = obtenerPokemonPorId(widget.equipoAliado[0]);
+    }
+    
+    // Cargar Pokémon enemigo
+    if (widget.equipoEnemigo.isNotEmpty) {
+      pokemonEnemigo = obtenerPokemonPorId(widget.equipoEnemigo[0]);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Si los Pokémon son null, mostrar placeholders
+    final nombreAliado = pokemonAliado?.nombre ?? 'MissingNo';
+    final nombreEnemigo = pokemonEnemigo?.nombre ?? 'MissingNo';
+    
     return Scaffold(
       body: Stack(
         children: [
@@ -381,72 +433,112 @@ class BattleView extends StatelessWidget {
             ),
           ),
           
-          // Pokémon ENEMIGO (parte superior derecha)
+          // BOTÓN PARA REGRESAR AL MENÚ PRINCIPAL (ESQUINA SUPERIOR IZQUIERDA)
           Positioned(
-            top: 100,
-            right: 30,
-            child: Container(
-              width: 200,
-              height: 200,
-              child: Image.asset(
-                '/sprites/pokemon/${pokemonEnemigo.toLowerCase()}.png',
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[300],
-                    child: Center(
-                      child: Text(
-                        'No encontrado\n${pokemonEnemigo.toUpperCase()}',
-                        style: GoogleFonts.pressStart2p(
-                          fontSize: 10,
-                          color: Colors.black54,
-                        ),
-                        textAlign: TextAlign.center,
+            top: 20,
+            left: 20,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context); // Regresar al menú principal
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.black, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 6,
+                      offset: Offset(2, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_back, color: Colors.white, size: 18),
+                    SizedBox(width: 8),
+                    Text(
+                      'REGRESAR',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 12,
+                        color: Colors.white,
                       ),
                     ),
-                  );
-                },
+                  ],
+                ),
               ),
             ),
           ),
           
-          // Pokémon ALIADO (parte inferior izquierda)
+          // Pokémon ENEMIGO
           Positioned(
-            bottom: 100,
-            left: 30,
+            top: 200,
+            right: 300,
             child: Container(
-              width: 200,
-              height: 200,
-              child: Image.asset(
-                '/sprites/pokemon/${pokemonAliado.toLowerCase()}.png',
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[300],
-                    child: Center(
-                      child: Text(
-                        'No encontrado\n${pokemonAliado.toUpperCase()}',
-                        style: GoogleFonts.pressStart2p(
-                          fontSize: 10,
-                          color: Colors.black54,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  );
-                },
-              ),
+              width: 480,
+              height: 480,
+              child: pokemonEnemigo != null
+                  ? Image.asset(
+                      '/sprites/pokemon/${pokemonEnemigo!.nombre}.png',
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return _buildPlaceholder(nombreEnemigo);
+                      },
+                    )
+                  : _buildPlaceholder(nombreEnemigo),
+            ),
+          ),
+          
+          // Pokémon ALIADO
+          Positioned(
+            bottom: 150,
+            left: 270,
+            child: Container(
+              width: 480,
+              height: 480,
+              child: pokemonAliado != null
+                  ? Image.asset(
+                      '/sprites/pokemon/${pokemonAliado!.nombre}.png',
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return _buildPlaceholder(nombreAliado);
+                      },
+                    )
+                  : _buildPlaceholder(nombreAliado),
             ),
           ),
           
           // Menú de opciones de combate
           Positioned(
-            bottom: 20,
+            bottom: 50,
             left: 20,
             right: 20,
             child: _buildMenuCombate(context),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPlaceholder(String nombre) {
+    return Container(
+      color: Colors.grey[300],
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.question_mark, size: 50, color: Colors.black54),
+            Text(
+              nombre.toLowerCase(),
+              style: GoogleFonts.pressStart2p(
+                fontSize: 10,
+                color: Colors.black54,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -460,6 +552,7 @@ class BattleView extends StatelessWidget {
         border: Border.all(color: Colors.black, width: 3),
       ),
       child: GridView.count(
+        physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 2,
         padding: EdgeInsets.all(10),
         childAspectRatio: 2.5,
@@ -474,7 +567,7 @@ class BattleView extends StatelessWidget {
             // Lógica usar item
           }),
           _buildBotonCombate('HUIDA', Icons.exit_to_app, Colors.orange, () {
-            Navigator.pop(context); // Volver al menú principal
+            Navigator.pop(context);
           }),
         ],
       ),

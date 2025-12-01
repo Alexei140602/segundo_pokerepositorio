@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'tablatipos.dart';
 import 'pokemones.dart';
 
