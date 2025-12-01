@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// IMPORTA TU MANEJADOR DE AUDIO
+import '../source/AudioManager.dart';
+
+
 class MenuView extends StatefulWidget {
   const MenuView({super.key});
 
@@ -33,6 +37,13 @@ class _MenuViewState extends State<MenuView> {
     'mimikyu',
     'metagross'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // 🎵 MÚSICA DEL MENÚ (cambia la ruta/nombre a la tuya)
+    AudioManager().playBackgroundMusic("audio/menu_theme.mp3");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,19 +119,27 @@ class _MenuViewState extends State<MenuView> {
           setState(() {
             selectedIndex = index;
             if (index == 0) {
+              // 🎵 CAMBIAR A MÚSICA DE BATALLA
+              AudioManager().playBackgroundMusic("audio/battle_theme.mp3");
+
               // Navegar a la pantalla de combate
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BattleView(
+                  builder: (context) => const BattleView(
                     pokemonAliado: 'charizard',
                     pokemonEnemigo: 'chandelure',
                   ),
                 ),
-              );
+              ).then((_) {
+                // 🎵 CUANDO REGRESA DE LA BATALLA, VOLVER A MÚSICA DEL MENÚ
+                AudioManager().playBackgroundMusic("audio/menu_theme.mp3");
+              });
             } else {
               mostrarMochila = true;
               pokemonSeleccionado = -1;
+              // Si quieres sonido al abrir mochila, descomenta:
+              // AudioManager().playSoundEffect("audio/open_bag.wav");
             }
           });
         },
@@ -385,11 +404,11 @@ class BattleView extends StatelessWidget {
           Positioned(
             top: 100,
             right: 30,
-            child: Container(
+            child: SizedBox(
               width: 200,
               height: 200,
               child: Image.asset(
-                '/sprites/pokemon/${pokemonEnemigo.toLowerCase()}.png',
+                'assets/sprites/pokemon/${pokemonEnemigo.toLowerCase()}.png',
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -414,11 +433,11 @@ class BattleView extends StatelessWidget {
           Positioned(
             bottom: 100,
             left: 30,
-            child: Container(
+            child: SizedBox(
               width: 200,
               height: 200,
               child: Image.asset(
-                '/sprites/pokemon/${pokemonAliado.toLowerCase()}.png',
+                'assets/sprites/pokemon/${pokemonAliado.toLowerCase()}.png',
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -461,7 +480,7 @@ class BattleView extends StatelessWidget {
       ),
       child: GridView.count(
         crossAxisCount: 2,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         childAspectRatio: 2.5,
         children: [
           _buildBotonCombate('ATACAR', Icons.bolt, Colors.red, () {
@@ -481,11 +500,12 @@ class BattleView extends StatelessWidget {
     );
   }
 
-  Widget _buildBotonCombate(String texto, IconData icono, Color color, VoidCallback onTap) {
+  Widget _buildBotonCombate(
+      String texto, IconData icono, Color color, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
@@ -495,7 +515,7 @@ class BattleView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icono, color: Colors.white, size: 20),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               texto,
               style: GoogleFonts.pressStart2p(
