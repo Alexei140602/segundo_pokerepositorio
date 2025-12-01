@@ -9,6 +9,10 @@ import 'dart:math';
 // Remueve estos imports si causan problemas con dart:ffi
 // o hazlos condicionales
 
+// IMPORTA TU MANEJADOR DE AUDIO
+import '../source/AudioManager.dart';
+
+
 class MenuView extends StatefulWidget {
   const MenuView({super.key});
 
@@ -41,6 +45,13 @@ class _MenuViewState extends State<MenuView> {
     'mimikyu',
     'metagross'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // 🎵 MÚSICA DEL MENÚ (cambia la ruta/nombre a la tuya)
+    AudioManager().playBackgroundMusic("audio/menu_theme.mp3");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,20 +127,34 @@ class _MenuViewState extends State<MenuView> {
           setState(() {
             selectedIndex = index;
             if (index == 0) {
+              // 🎵 CAMBIAR A MÚSICA DE BATALLA
+              AudioManager().playBackgroundMusic("audio/battle_theme.mp3");
+
               // Navegar a la pantalla de combate
               Navigator.push(
                 context,
                 MaterialPageRoute(
+<<<<<<< HEAD
                   builder: (context) => BattleView(
                     // Pasar Pokémon reales
                     equipoAliado: generarEquipo(),
                     equipoEnemigo: generarEquipo(),
+=======
+                  builder: (context) => const BattleView(
+                    pokemonAliado: 'charizard',
+                    pokemonEnemigo: 'chandelure',
+>>>>>>> a8ad99523ab6feb54ba36d294a3caa72ab99fa9d
                   ),
                 ),
-              );
+              ).then((_) {
+                // 🎵 CUANDO REGRESA DE LA BATALLA, VOLVER A MÚSICA DEL MENÚ
+                AudioManager().playBackgroundMusic("audio/menu_theme.mp3");
+              });
             } else {
               mostrarMochila = true;
               pokemonSeleccionado = -1;
+              // Si quieres sonido al abrir mochila, descomenta:
+              // AudioManager().playSoundEffect("audio/open_bag.wav");
             }
           });
         },
@@ -435,6 +460,7 @@ class _BattleViewState extends State<BattleView> {
           
           // BOTÓN PARA REGRESAR AL MENÚ PRINCIPAL (ESQUINA SUPERIOR IZQUIERDA)
           Positioned(
+<<<<<<< HEAD
             top: 20,
             left: 20,
             child: GestureDetector(
@@ -464,6 +490,27 @@ class _BattleViewState extends State<BattleView> {
                       style: GoogleFonts.pressStart2p(
                         fontSize: 12,
                         color: Colors.white,
+=======
+            top: 100,
+            right: 30,
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: Image.asset(
+                'assets/sprites/pokemon/${pokemonEnemigo.toLowerCase()}.png',
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: Center(
+                      child: Text(
+                        'No encontrado\n${pokemonEnemigo.toUpperCase()}',
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 10,
+                          color: Colors.black54,
+                        ),
+                        textAlign: TextAlign.center,
+>>>>>>> a8ad99523ab6feb54ba36d294a3caa72ab99fa9d
                       ),
                     ),
                   ],
@@ -474,6 +521,7 @@ class _BattleViewState extends State<BattleView> {
           
           // Pokémon ENEMIGO
           Positioned(
+<<<<<<< HEAD
             top: 200,
             right: 300,
             child: Container(
@@ -507,6 +555,32 @@ class _BattleViewState extends State<BattleView> {
                       },
                     )
                   : _buildPlaceholder(nombreAliado),
+=======
+            bottom: 100,
+            left: 30,
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: Image.asset(
+                'assets/sprites/pokemon/${pokemonAliado.toLowerCase()}.png',
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: Center(
+                      child: Text(
+                        'No encontrado\n${pokemonAliado.toUpperCase()}',
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 10,
+                          color: Colors.black54,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                },
+              ),
+>>>>>>> a8ad99523ab6feb54ba36d294a3caa72ab99fa9d
             ),
           ),
           
@@ -554,7 +628,7 @@ class _BattleViewState extends State<BattleView> {
       child: GridView.count(
         physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 2,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         childAspectRatio: 2.5,
         children: [
           _buildBotonCombate('ATACAR', Icons.bolt, Colors.red, () {
@@ -574,11 +648,12 @@ class _BattleViewState extends State<BattleView> {
     );
   }
 
-  Widget _buildBotonCombate(String texto, IconData icono, Color color, VoidCallback onTap) {
+  Widget _buildBotonCombate(
+      String texto, IconData icono, Color color, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.all(5),
+        margin: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
@@ -588,7 +663,7 @@ class _BattleViewState extends State<BattleView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icono, color: Colors.white, size: 20),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               texto,
               style: GoogleFonts.pressStart2p(
