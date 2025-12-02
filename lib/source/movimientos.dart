@@ -19,7 +19,6 @@ class Movimiento {
 }
 
 class Movimientos {
-  // Movimientos por tipo
   static Movimiento placaje = Movimiento(
     id: 1,
     nombre: "Placaje",
@@ -187,4 +186,17 @@ class Movimientos {
   static Movimiento? porId(int id) {
     return todos.firstWhere((movimiento) => movimiento.id == id);
   }
+  List<int> generarMovimientosAleatorios() {
+  Random random = Random();
+  List<int> idsMovimientos = [];
+  
+  while (idsMovimientos.length < 4) {
+    int idAleatorio = random.nextInt(17) + 1; // 1-17
+    if (!idsMovimientos.contains(idAleatorio)) {
+      idsMovimientos.add(idAleatorio);
+    }
+  }
+  
+  return idsMovimientos;
+}
 }

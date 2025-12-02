@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'views/menu_view.dart';
+import 'package:pokemonpro/views/menu_view.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -11,13 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pokémon Style Game',
+      title: 'Pokémon Battle',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        useMaterial3: true,
       ),
-      home: const MenuView(), 
       debugShowCheckedModeBanner: false,
+      home: MenuView(), // Ahora debería funcionar, sino me doy un tiro
     );
   }
 }

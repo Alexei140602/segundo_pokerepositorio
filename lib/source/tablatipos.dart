@@ -131,7 +131,6 @@ double multiplicadorResistidoPor(List<int> tiposDefensa,int? tipoAtacante) {
     int contadorResistencia = 0;
     for (var i = 0; i < tiposDefensa.length; i++) 
     {
-    i=0;
     Tablatipos comparar= obtenerTipoPorId(tiposDefensa[i]);
     if (comparar.numeroresiste.contains(tipoAtacante)) {
         contadorResistencia++;
@@ -151,7 +150,6 @@ double multiplicadorSuperefectivoPor(List<int> tiposDefensa,tipoAtacante) {
     int contadorEfectivo = 0;
     for (var i = 0; i < tiposDefensa.length; i++) 
     {
-    i=0;
     Tablatipos comparar= obtenerTipoPorId(tiposDefensa[i]);
     if (comparar.numeroefectivo.contains(tipoAtacante)) {
         contadorEfectivo++;
@@ -170,7 +168,6 @@ double multiplicadorSuperefectivoPor(List<int> tiposDefensa,tipoAtacante) {
   {
     for (var i = 0; i < tiposDefensa.length; i++) 
     {
-    i=0;
     Tablatipos comparar= obtenerTipoPorId(tiposDefensa[i]);
     if (comparar.numeroinmune.contains(tipoAtacante)) {
        return true;
